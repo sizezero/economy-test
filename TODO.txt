@@ -1,0 +1,5 @@
+
+- make into git repository and push to github
+- render grid
+- zoom and pan with mouse
+- with keyboard
