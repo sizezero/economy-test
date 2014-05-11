@@ -26,7 +26,7 @@ public class Main {
 		frame.getContentPane().add(comp);
 
 		// Display the window.
-		frame.setSize(new Dimension(300,200));
+		frame.setSize(new Dimension(600,400));
 		frame.pack();
 		frame.setVisible(true);
 	}
