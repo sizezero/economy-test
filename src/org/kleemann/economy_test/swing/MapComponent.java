@@ -1,4 +1,4 @@
-package org.kleemann.economy_test;
+package org.kleemann.economy_test.swing;
 
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;

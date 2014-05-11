@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import org.kleemann.economy_test.swing.MapComponent;
+
 public class Main {
 
 	/**
@@ -16,8 +18,6 @@ public class Main {
 		JFrame frame = new JFrame("Economy Test");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// Add the ubiquitous "Hello World" label.
-		// JLabel label = new JLabel("Hello World");
 		JComponent comp = new MapComponent();
 		Dimension d = new Dimension(600, 400);
 		comp.setMinimumSize(d);
