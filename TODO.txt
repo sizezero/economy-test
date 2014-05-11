@@ -2,4 +2,4 @@
 D - make into git repository and push to github
 D - render grid
 D - zoom and pan with mouse
-- with keyboard
+D - with keyboard

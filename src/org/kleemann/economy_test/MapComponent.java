@@ -1,11 +1,14 @@
 package org.kleemann.economy_test;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
 
 public class MapComponent extends JComponent {
@@ -24,6 +27,8 @@ public class MapComponent extends JComponent {
 	private static final int MAP_DY = (GAP_Y + TERRAIN_DY) * GRID_DY;
 
 	private static final int CLICKS_PER_ZOOM = 1;
+
+	private static final int PAN_PER_KEYSTROKE = 3;
 
 	private boolean centerIsUnset = true;
 	// center is the scale 1.0 map coordinates that exist at the center of the
@@ -45,13 +50,67 @@ public class MapComponent extends JComponent {
 		addMouseListener(m);
 		addMouseMotionListener(m);
 		addMouseWheelListener(m);
+
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0),
+				"pan left");
+		getActionMap().put("pan left", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pan(-PAN_PER_KEYSTROKE, 0);
+			}
+		});
+
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0),
+				"pan right");
+		getActionMap().put("pan right", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pan(PAN_PER_KEYSTROKE, 0);
+			}
+		});
+
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "pan up");
+		getActionMap().put("pan up", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pan(0, -PAN_PER_KEYSTROKE);
+			}
+		});
+
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
+				"pan down");
+		getActionMap().put("pan down", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pan(0, PAN_PER_KEYSTROKE);
+			}
+		});
+
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0),
+				"zoom out");
+		getActionMap().put("zoom out", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				zoom(1);
+			}
+		});
+
+		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0),
+				"zoom in");
+		getActionMap().put("zoom in", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				zoom(-1);
+			}
+		});
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		final int w = getWidth();
 		final int h = getHeight();
-		final float w2 = w/2.0f;
-		final float h2 = h/2.0f;
+		final float w2 = w / 2.0f;
+		final float h2 = h / 2.0f;
 
 		// determine scale based on clicks
 		if (scaleClicks == 0) {
@@ -89,8 +148,8 @@ public class MapComponent extends JComponent {
 		g.setColor(getForeground());
 		for (int x = 0; x < GRID_DX; ++x) {
 			for (int y = 0; y < GRID_DY; ++y) {
-				final float ux = - center_x + w2 + x * (TERRAIN_DX + GAP_X);
-				final float uy = - center_y + h2 + y * (TERRAIN_DY + GAP_Y);
+				final float ux = -center_x + w2 + x * (TERRAIN_DX + GAP_X);
+				final float uy = -center_y + h2 + y * (TERRAIN_DY + GAP_Y);
 				final int sx = (int) (((ux - w2) * scale) + w2);
 				final int sy = (int) (((uy - h2) * scale) + h2);
 				g.fillRect(sx, sy, sdx, sdy);
@@ -99,9 +158,9 @@ public class MapComponent extends JComponent {
 		// g2d.dispose(); // clean up
 	}
 
-	private void shift(int offx, int offy) {
-		center_x = center_x - offx/scale;
-		center_y = center_y - offy/scale;
+	private void pan(int offx, int offy) {
+		center_x = center_x - offx / scale;
+		center_y = center_y - offy / scale;
 		System.out.println("off " + offx + " " + offy);
 		System.out.println("center " + center_x + " " + center_y);
 		repaint();
@@ -127,7 +186,7 @@ public class MapComponent extends JComponent {
 		public void mouseDragged(MouseEvent e) {
 			final int diffX = e.getX() - lastX;
 			final int diffY = e.getY() - lastY;
-			shift(diffX, diffY);
+			pan(diffX, diffY);
 			lastX = e.getX();
 			lastY = e.getY();
 		}
