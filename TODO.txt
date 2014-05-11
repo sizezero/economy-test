@@ -3,3 +3,21 @@ D - make into git repository and push to github
 D - render grid
 D - zoom and pan with mouse
 D - with keyboard
+
+Basic Terrain
+
+  - Thing
+  - Terrain
+    - Plain
+    - Forest
+    - Desert
+    - Mountain
+    - Water
+  - Map of UI delegates for each concrete thing
+  - render terrain as solid colors
+  - read bitmap, create terrain, render
+  - Other thing objects
+    - Grass
+    - Tree
+    - Rock
+  - sprinkle at random on map
