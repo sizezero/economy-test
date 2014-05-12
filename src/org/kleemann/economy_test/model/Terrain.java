@@ -19,26 +19,26 @@ public abstract class Terrain {
 	 */
 	public static final int DIM = 100;
 
-	private final int row;
-	private final int column;
+	private final int x;
+	private final int y;
 
-	public Terrain(int column, int row) {
-		this.column = column;
-		this.row = row;
+	public Terrain(int x, int y) {
+		this.y = x;
+		this.x = y;
 	}
 
 	/**
 	 * Each terrain has a unique row/column from 0 to the map size
 	 */
-	public int getRow() {
-		return row;
+	public int getX() {
+		return x;
 	}
 
 	/**
 	 * Each terrain has a unique row/column from 0 to the map size
 	 */
-	public int getColumn() {
-		return column;
+	public int getY() {
+		return y;
 	}
 
 }

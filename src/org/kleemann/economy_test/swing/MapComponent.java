@@ -57,7 +57,8 @@ public class MapComponent extends JComponent {
 	private int scaleClicks = 0;
 
 	public MapComponent() {
-		map = new TerrainMap();
+		// map = TerrainMap.createRandom();
+		map = TerrainMap.createFromFile();
 
 		lookup = new HashMap<String, TerrainRender>();
 		Class c = Desert.class;

@@ -13,7 +13,7 @@ D    - Desert
 D    - Mountain
 D  - Map of UI delegates for each concrete thing
 D  - render terrain as solid colors
-  - read bitmap, create terrain, render
+D  - read bitmap, create terrain, render
   - Thing
   - Other thing objects
     - Grass
