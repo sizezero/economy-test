@@ -5,30 +5,41 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
 
+import org.kleemann.economy_test.model.Desert;
+import org.kleemann.economy_test.model.Forest;
+import org.kleemann.economy_test.model.Mountain;
+import org.kleemann.economy_test.model.Plain;
+import org.kleemann.economy_test.model.Terrain;
+import org.kleemann.economy_test.model.TerrainMap;
+
 public class MapComponent extends JComponent {
 
 	private static final int GAP_X = 1;
 	private static final int GAP_Y = GAP_X;
 
-	private static final int GRID_DX = 15;
-	private static final int GRID_DY = 10;
-
 	private static final int TERRAIN_DX = 20;
 	private static final int TERRAIN_DY = TERRAIN_DX;
-
-	// map size in scale 1 pixels
-	private static final int MAP_DX = (GAP_X + TERRAIN_DX) * GRID_DX;
-	private static final int MAP_DY = (GAP_Y + TERRAIN_DY) * GRID_DY;
 
 	private static final int CLICKS_PER_ZOOM = 1;
 
 	private static final int PAN_PER_KEYSTROKE = 3;
+
+	private final TerrainMap map;
+
+	// map of model.Terrain class names to TerrainRender objects
+	private final Map<String, TerrainRender> lookup;
+
+	// map size in scale 1 pixels
+	private final int gridWidth;
+	private final int gridHeight;
 
 	private boolean centerIsUnset = true;
 	// center is the scale 1.0 map coordinates that exist at the center of the
@@ -46,6 +57,21 @@ public class MapComponent extends JComponent {
 	private int scaleClicks = 0;
 
 	public MapComponent() {
+		map = new TerrainMap();
+
+		lookup = new HashMap<String, TerrainRender>();
+		Class c = Desert.class;
+		lookup.put(c.getName(), new TerrainRender(c));
+		c = Forest.class;
+		lookup.put(c.getName(), new TerrainRender(c));
+		c = Plain.class;
+		lookup.put(c.getName(), new TerrainRender(c));
+		c = Mountain.class;
+		lookup.put(c.getName(), new TerrainRender(c));
+
+		gridWidth = (GAP_X + TERRAIN_DX) * map.getWidth();
+		gridHeight = (GAP_Y + TERRAIN_DY) * map.getHeight();
+
 		MouseListener m = new MouseListener();
 		addMouseListener(m);
 		addMouseMotionListener(m);
@@ -129,8 +155,8 @@ public class MapComponent extends JComponent {
 		// not sure if there is a JComponent callback that reliably tells us
 		// that the width and height have changed
 		if (centerIsUnset || oldWidth != w || oldHeight != h) {
-			center_x = MAP_DX / 2.0f;
-			center_y = MAP_DY / 2.0f;
+			center_x = gridWidth / 2.0f;
+			center_y = gridHeight / 2.0f;
 			centerIsUnset = false;
 			oldWidth = w;
 			oldHeight = h;
@@ -146,13 +172,15 @@ public class MapComponent extends JComponent {
 
 		// Graphics2D g2d = (Graphics2D) g.create();
 		g.setColor(getForeground());
-		for (int x = 0; x < GRID_DX; ++x) {
-			for (int y = 0; y < GRID_DY; ++y) {
+		for (int x = 0; x < map.getWidth(); ++x) {
+			for (int y = 0; y < map.getHeight(); ++y) {
 				final float ux = -center_x + w2 + x * (TERRAIN_DX + GAP_X);
 				final float uy = -center_y + h2 + y * (TERRAIN_DY + GAP_Y);
 				final int sx = (int) (((ux - w2) * scale) + w2);
 				final int sy = (int) (((uy - h2) * scale) + h2);
-				g.fillRect(sx, sy, sdx, sdy);
+				Terrain t = map.get(x, y);
+				TerrainRender tr = lookup.get(t.getClass().getName());
+				tr.render(t, g, sx, sy, sdx, sdy);
 			}
 		}
 		// g2d.dispose(); // clean up

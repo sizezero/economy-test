@@ -6,16 +6,15 @@ D - with keyboard
 
 Basic Terrain
 
-  - Thing
-  - Terrain
-    - Plain
-    - Forest
-    - Desert
-    - Mountain
-    - Water
-  - Map of UI delegates for each concrete thing
-  - render terrain as solid colors
+D  - Terrain
+D    - Plain
+D    - Forest
+D    - Desert
+D    - Mountain
+D  - Map of UI delegates for each concrete thing
+D  - render terrain as solid colors
   - read bitmap, create terrain, render
+  - Thing
   - Other thing objects
     - Grass
     - Tree
